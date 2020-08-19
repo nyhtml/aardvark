@@ -1,2 +1,3 @@
-# WordPress-Plugins-Pro
-The WordPress Plugins Free to Pro Project
+# WordPress Plugins Pro
+
+★ WP Image Zoom
