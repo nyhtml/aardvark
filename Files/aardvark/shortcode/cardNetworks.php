@@ -68,7 +68,7 @@ function cardnetworks_shortcode() {
 }
 add_shortcode('cardNetworks', 'cardnetworks_shortcode');
 
-// Enqueue styles
+// Enqueue inline styles
 function cardnetworks_enqueue_styles() {
     $css = "
     .card-networks-wrapper {
@@ -91,9 +91,23 @@ function cardnetworks_enqueue_styles() {
         color: white;
         transition: background 0.3s ease;
     }
+    .cn-btn:hover {
+        opacity: 0.85;
+    }
     .cn-btn.facebook  { background: #3b5998; }
     .cn-btn.twitter   { background: #1da1f2; }
     .cn-btn.linkedin  { background: #0077b5; }
     .cn-btn.github    { background: #333; }
     .cn-btn.youtube   { background: #ff0000; }
-    .cn-btn.instagram { ba
+    .cn-btn.instagram { background: #e1306c; }
+    @media (max-width: 480px) {
+        .card-networks-buttons {
+            flex-direction: column;
+        }
+    }
+    ";
+    wp_register_style('cardnetworks-inline-style', false);
+    wp_enqueue_style('cardnetworks-inline-style');
+    wp_add_inline_style('cardnetworks-inline-style', $css);
+}
+add_action('wp_enqueue_scripts', 'cardnetworks_enqueue_styles');
