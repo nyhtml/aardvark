@@ -18,11 +18,12 @@ if (!defined('ABSPATH')) exit; // Prevent direct access
 define('SIPYLUS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('SIPYLUS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
-// Load shortcodes
+// Load plugins and shortcodes
 require_once SIPYLUS_PLUGIN_DIR . 'shortcode/cardNetworks.php';
 require_once SIPYLUS_PLUGIN_DIR . 'shortcode/cardResume.php';
 require_once SIPYLUS_PLUGIN_DIR . 'shortcode/cardSkill.php';
 require_once SIPYLUS_PLUGIN_DIR . 'plugin/phpVersion.php';
+require_once SIPYLUS_PLUGIN_DIR . 'plugin/securityRestBlock.php';
 
 // Add Settings link on the Plugins page
 function sipylus_custom_shortcodes_settings_link($links) {
@@ -35,11 +36,11 @@ add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'sipylus_custom_s
 // Register admin menu
 function sipylus_register_admin_menu() {
     add_options_page(
-        'Aardvark Settings',   // Page title
-        'Aardvark', // Menu label
-        'manage_options',      // Capability
-        'sipylus-shortcodes-settings', // Menu slug
-        'sipylus_render_settings_page' // Callback function
+        'Aardvark Settings',                 // Page title
+        'Aardvark',                          // Menu label
+        'manage_options',                    // Capability
+        'sipylus-shortcodes-settings',       // Menu slug
+        'sipylus_render_settings_page'       // Callback function
     );
 }
 add_action('admin_menu', 'sipylus_register_admin_menu');
@@ -61,7 +62,7 @@ function sipylus_render_settings_page() {
     <?php
 }
 
-// Register all settings and fields for social media links and PHP version toggle
+// Register all settings and fields for social media links, PHP version toggle, and REST block toggle
 function sipylus_register_settings() {
 
     add_settings_section(
@@ -111,24 +112,31 @@ function sipylus_register_settings() {
         'sipylus_youtube',
         'YouTube URL or Username',
         'sipylus_youtube_callback',
-        'sipylus-shortcodes',
         'sipylus_main_section'
     );
     add_settings_field(
         'sipylus_instagram',
         'Instagram URL or Username',
         'sipylus_instagram_callback',
-        'sipylus-shortcodes',
         'sipylus_main_section'
     );
 
     // PHP Version toggle option
     register_setting('sipylus_settings_group', 'sipylus_enable_phpversion');
-
     add_settings_field(
         'sipylus_enable_phpversion',
         'Enable PHP Version Display',
         'sipylus_enable_phpversion_callback',
+        'sipylus-shortcodes',
+        'sipylus_main_section'
+    );
+
+    // NEW: REST users endpoint block toggle
+    register_setting('sipylus_settings_group', 'sipylus_block_rest_users');
+    add_settings_field(
+        'sipylus_block_rest_users',
+        'Block User REST Endpoint',
+        'sipylus_block_rest_users_callback',
         'sipylus-shortcodes',
         'sipylus_main_section'
     );
@@ -170,4 +178,10 @@ function sipylus_instagram_callback() {
 function sipylus_enable_phpversion_callback() {
     $enabled = get_option('sipylus_enable_phpversion', '');
     echo '<input type="checkbox" name="sipylus_enable_phpversion" value="1" ' . checked(1, $enabled, false) . '> Show PHP & MySQL versions on Dashboard';
+}
+
+// NEW: REST users endpoint block toggle callback
+function sipylus_block_rest_users_callback() {
+    $enabled = get_option('sipylus_block_rest_users', '');
+    echo '<input type="checkbox" name="sipylus_block_rest_users" value="1" ' . checked(1, $enabled, false) . '> Disable /wp/v2/users endpoint';
 }
