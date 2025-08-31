@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Aardvark - Anomalous Architecture for Responsive Design & Virtual Asset Replication Kit
+Plugin Name: Aardvark&trade; by Sipylus
 Plugin URI: https://github.com/nyhtml/aardvark
-Description: Provides custom shortcodes with inline styling and responsive design.
-Version: 1.0.0
+Description: The Anomalous Architecture for Responsive Design & Virtual Asset Replication Kit offers security, along with custom shortcodes that feature inline styling and responsive design.
+Version: 2025.08.31.1
 Author: Stephan Pringle
 Author URI: http://www.stephanpringle.com
 Contributors: nyhtml
@@ -12,176 +12,132 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-if (!defined('ABSPATH')) exit; // Prevent direct access
+if (!defined('ABSPATH')) exit;
 
-// Define plugin constants
-define('SIPYLUS_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('SIPYLUS_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('AARDVARK_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('AARDVARK_PLUGIN_URL', plugin_dir_url(__FILE__));
 
-// Load plugins and shortcodes
-require_once SIPYLUS_PLUGIN_DIR . 'shortcode/cardNetworks.php';
-require_once SIPYLUS_PLUGIN_DIR . 'shortcode/cardResume.php';
-require_once SIPYLUS_PLUGIN_DIR . 'shortcode/cardSkill.php';
-require_once SIPYLUS_PLUGIN_DIR . 'plugin/phpVersion.php';
-require_once SIPYLUS_PLUGIN_DIR . 'plugin/securityRestBlock.php';
+// --- Load required files ---
+require_once AARDVARK_PLUGIN_DIR . 'shortcode/cardNetworks.php';
+require_once AARDVARK_PLUGIN_DIR . 'shortcode/cardResume.php';
+require_once AARDVARK_PLUGIN_DIR . 'shortcode/cardSkill.php';
+require_once AARDVARK_PLUGIN_DIR . 'plugin/phpVersion.php';
+require_once AARDVARK_PLUGIN_DIR . 'plugin/securityRestBlock.php';
 
-// Add Settings link on the Plugins page
-function sipylus_custom_shortcodes_settings_link($links) {
-    $settings_link = '<a href="options-general.php?page=sipylus-shortcodes-settings">Settings</a>';
+// --- Admin Menu ---
+add_action('admin_menu', 'aardvark_admin_menu');
+function aardvark_admin_menu() {
+    add_menu_page(
+        'Aardvark™ Settings',
+        'Aardvark™',
+        'manage_options',
+        'aardvark-settings',
+        'aardvark_settings_page',
+        'dashicons-shield'
+    );
+    add_submenu_page(
+        'aardvark-settings',
+        'Aardvark™ Reset',
+        'Reset',
+        'manage_options',
+        'aardvark-reset',
+        'aardvark_reset_page'
+    );
+}
+
+// --- Add Settings link on Plugins page ---
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'aardvark_custom_shortcodes_settings_link');
+function aardvark_custom_shortcodes_settings_link($links) {
+    $settings_link = '<a href="admin.php?page=aardvark-settings">Settings</a>';
     array_unshift($links, $settings_link);
     return $links;
 }
-add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'sipylus_custom_shortcodes_settings_link');
 
-// Register admin menu
-function sipylus_register_admin_menu() {
-    add_options_page(
-        'Aardvark Settings',                 // Page title
-        'Aardvark',                          // Menu label
-        'manage_options',                    // Capability
-        'sipylus-shortcodes-settings',       // Menu slug
-        'sipylus_render_settings_page'       // Callback function
-    );
+// --- Register Settings ---
+add_action('admin_init', 'aardvark_register_settings');
+function aardvark_register_settings() {
+    register_setting('aardvark_settings_group', 'aardvark_facebook');
+    register_setting('aardvark_settings_group', 'aardvark_twitter');
+    register_setting('aardvark_settings_group', 'aardvark_linkedin');
+    register_setting('aardvark_settings_group', 'aardvark_github');
+    register_setting('aardvark_settings_group', 'aardvark_youtube');
+    register_setting('aardvark_settings_group', 'aardvark_instagram');
+    register_setting('aardvark_power_group', 'aardvark_php_version_display');
+    register_setting('aardvark_power_group', 'aardvark_rest_api_block');
 }
-add_action('admin_menu', 'sipylus_register_admin_menu');
 
-// Render the settings page
-function sipylus_render_settings_page() {
+// --- Settings Page ---
+function aardvark_settings_page() {
     ?>
     <div class="wrap">
-        <h1>Aardvark Settings</h1>
-        <p>Aardvark: Anomalous Architecture for Responsive Design & Virtual Asset Replication Kit.</p>
-        <form method="post" action="options.php">
-            <?php
-                settings_fields('sipylus_settings_group');
-                do_settings_sections('sipylus-shortcodes');
-                submit_button();
+        <h1>Aardvark™ Settings</h1>
+        <h2 class="nav-tab-wrapper">
+            <a href="?page=aardvark-settings&tab=social" class="nav-tab <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'social') ? 'nav-tab-active' : ''; ?>">Social Media</a>
+            <a href="?page=aardvark-settings&tab=power" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'power') ? 'nav-tab-active' : ''; ?>">Power Options</a>
+        </h2>
+        <?php
+        $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'social';
+        if ($active_tab == 'social') {
             ?>
-        </form>
+            <form method="post" action="options.php">
+                <?php settings_fields('aardvark_settings_group'); ?>
+                <table class="form-table">
+                    <tr><th>Facebook URL or Username</th>
+                        <td><input type="text" name="aardvark_facebook" value="<?php echo esc_attr(get_option('aardvark_facebook')); ?>" placeholder="e.g. username or https://facebook.com/username"></td></tr>
+                    <tr><th>Twitter URL or Username</th>
+                        <td><input type="text" name="aardvark_twitter" value="<?php echo esc_attr(get_option('aardvark_twitter')); ?>" placeholder="e.g. username or https://twitter.com/username"></td></tr>
+                    <tr><th>LinkedIn URL or Username</th>
+                        <td><input type="text" name="aardvark_linkedin" value="<?php echo esc_attr(get_option('aardvark_linkedin')); ?>" placeholder="e.g. username or https://linkedin.com/in/username"></td></tr>
+                    <tr><th>Github URL or Username</th>
+                        <td><input type="text" name="aardvark_github" value="<?php echo esc_attr(get_option('aardvark_github')); ?>" placeholder="e.g. username or https://github.com/username"></td></tr>
+                    <tr><th>Youtube URL or Username</th>
+                        <td><input type="text" name="aardvark_youtube" value="<?php echo esc_attr(get_option('aardvark_youtube')); ?>" placeholder="e.g. @username or https://youtube.com/@username"></td></tr>
+                    <tr><th>Instagram URL or Username</th>
+                        <td><input type="text" name="aardvark_instagram" value="<?php echo esc_attr(get_option('aardvark_instagram')); ?>" placeholder="e.g. username or https://instagram.com/username"></td></tr>
+                </table>
+                <?php submit_button(); ?>
+            </form>
+            <?php
+        } elseif ($active_tab == 'power') {
+            ?>
+            <form method="post" action="options.php">
+                <?php settings_fields('aardvark_power_group'); ?>
+                <table class="form-table">
+                    <tr><th>Enable PHP Version Display</th>
+                        <td><input type="checkbox" name="aardvark_php_version_display" value="1" <?php checked(1, get_option('aardvark_php_version_display'), true); ?> /> Show PHP & MySQL versions on Dashboard</td></tr>
+                    <tr><th>Block User REST Endpoint</th>
+                        <td><input type="checkbox" name="aardvark_rest_api_block" value="1" <?php checked(1, get_option('aardvark_rest_api_block'), true); ?> /> Disable REST API endpoint</td></tr>
+                </table>
+                <?php submit_button(); ?>
+            </form>
+            <?php
+        }
+        ?>
     </div>
     <?php
 }
 
-// Register all settings and fields for social media links, PHP version toggle, and REST block toggle
-function sipylus_register_settings() {
-
-    add_settings_section(
-        'sipylus_main_section',
-        'Social Media Settings',
-        'sipylus_main_section_text',
-        'sipylus-shortcodes'
-    );
-
-    // Social media options
-    register_setting('sipylus_settings_group', 'sipylus_facebook');
-    register_setting('sipylus_settings_group', 'sipylus_twitter');
-    register_setting('sipylus_settings_group', 'sipylus_linkedin');
-    register_setting('sipylus_settings_group', 'sipylus_github');
-    register_setting('sipylus_settings_group', 'sipylus_youtube');
-    register_setting('sipylus_settings_group', 'sipylus_instagram');
-
-    add_settings_field(
-        'sipylus_facebook',
-        'Facebook URL or Username',
-        'sipylus_facebook_callback',
-        'sipylus-shortcodes',
-        'sipylus_main_section'
-    );
-    add_settings_field(
-        'sipylus_twitter',
-        'Twitter URL or Username',
-        'sipylus_twitter_callback',
-        'sipylus-shortcodes',
-        'sipylus_main_section'
-    );
-    add_settings_field(
-        'sipylus_linkedin',
-        'LinkedIn URL or Username',
-        'sipylus_linkedin_callback',
-        'sipylus-shortcodes',
-        'sipylus_main_section'
-    );
-    add_settings_field(
-        'sipylus_github',
-        'GitHub URL or Username',
-        'sipylus_github_callback',
-        'sipylus-shortcodes',
-        'sipylus_main_section'
-    );
-    add_settings_field(
-        'sipylus_youtube',
-        'YouTube URL or Username',
-        'sipylus_youtube_callback',
-        'sipylus_main_section'
-    );
-    add_settings_field(
-        'sipylus_instagram',
-        'Instagram URL or Username',
-        'sipylus_instagram_callback',
-        'sipylus_main_section'
-    );
-
-    // PHP Version toggle option
-    register_setting('sipylus_settings_group', 'sipylus_enable_phpversion');
-    add_settings_field(
-        'sipylus_enable_phpversion',
-        'Enable PHP Version Display',
-        'sipylus_enable_phpversion_callback',
-        'sipylus-shortcodes',
-        'sipylus_main_section'
-    );
-
-    // NEW: REST users endpoint block toggle
-    register_setting('sipylus_settings_group', 'sipylus_block_rest_users');
-    add_settings_field(
-        'sipylus_block_rest_users',
-        'Block User REST Endpoint',
-        'sipylus_block_rest_users_callback',
-        'sipylus-shortcodes',
-        'sipylus_main_section'
-    );
-}
-add_action('admin_init', 'sipylus_register_settings');
-
-// Social Media section description
-function sipylus_main_section_text() {
-    echo '<p>Enter your social media profile URLs or usernames below.</p>';
-}
-
-// Social media callbacks
-function sipylus_facebook_callback() {
-    $value = get_option('sipylus_facebook', '');
-    echo '<input type="text" name="sipylus_facebook" value="' . esc_attr($value) . '" class="regular-text" placeholder="e.g. username or https://facebook.com/username">';
-}
-function sipylus_twitter_callback() {
-    $value = get_option('sipylus_twitter', '');
-    echo '<input type="text" name="sipylus_twitter" value="' . esc_attr($value) . '" class="regular-text" placeholder="e.g. username or https://twitter.com/username">';
-}
-function sipylus_linkedin_callback() {
-    $value = get_option('sipylus_linkedin', '');
-    echo '<input type="text" name="sipylus_linkedin" value="' . esc_attr($value) . '" class="regular-text" placeholder="e.g. username or https://linkedin.com/in/username">';
-}
-function sipylus_github_callback() {
-    $value = get_option('sipylus_github', '');
-    echo '<input type="text" name="sipylus_github" value="' . esc_attr($value) . '" class="regular-text" placeholder="e.g. username or https://github.com/username">';
-}
-function sipylus_youtube_callback() {
-    $value = get_option('sipylus_youtube', '');
-    echo '<input type="text" name="sipylus_youtube" value="' . esc_attr($value) . '" class="regular-text" placeholder="e.g. @username or https://youtube.com/@username">';
-}
-function sipylus_instagram_callback() {
-    $value = get_option('sipylus_instagram', '');
-    echo '<input type="text" name="sipylus_instagram" value="' . esc_attr($value) . '" class="regular-text" placeholder="e.g. username or https://instagram.com/username">';
-}
-
-// PHP Version toggle callback
-function sipylus_enable_phpversion_callback() {
-    $enabled = get_option('sipylus_enable_phpversion', '');
-    echo '<input type="checkbox" name="sipylus_enable_phpversion" value="1" ' . checked(1, $enabled, false) . '> Show PHP & MySQL versions on Dashboard';
-}
-
-// NEW: REST users endpoint block toggle callback
-function sipylus_block_rest_users_callback() {
-    $enabled = get_option('sipylus_block_rest_users', '');
-    echo '<input type="checkbox" name="sipylus_block_rest_users" value="1" ' . checked(1, $enabled, false) . '> Disable /wp/v2/users endpoint';
+// --- Reset Page ---
+function aardvark_reset_page() {
+    if (isset($_POST['aardvark_reset_confirm'])) {
+        delete_option('aardvark_facebook');
+        delete_option('aardvark_twitter');
+        delete_option('aardvark_linkedin');
+        delete_option('aardvark_github');
+        delete_option('aardvark_youtube');
+        delete_option('aardvark_instagram');
+        delete_option('aardvark_php_version_display');
+        delete_option('aardvark_rest_api_block');
+        echo '<div class="updated"><p>Aardvark plugin data has been deleted.</p></div>';
+    }
+    ?>
+    <div class="wrap">
+        <h1>Aardvark™ Tools</h1>
+        <form method="post">
+            <p>Clicking the button below will delete all Aardvark settings from the database. This does NOT uninstall the plugin.</p>
+            <input type="hidden" name="aardvark_reset_confirm" value="1">
+            <?php submit_button('Reset Plugin Data', 'delete'); ?>
+        </form>
+    </div>
+    <?php
 }
