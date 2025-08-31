@@ -1,8 +1,8 @@
 /*<br>
-Plugin Name: Aardvark - Anomalous Architecture for Responsive Design & Virtual Asset Replication Kit<br>
+Plugin Name: Aardvark&trade; by Sipylus<br>
 Plugin URI: https://github.com/nyhtml/aardvark<br>
-Description: Provides custom shortcodes with inline styling and responsive design.<br>
-Version: 1.0.0<br>
+DDescription: The Anomalous Architecture for Responsive Design & Virtual Asset Replication Kit offers security, along with custom shortcodes that feature inline styling and responsive design.<br>
+Version: 2025.08.31.1<br>
 Author: Stephan Pringle<br>
 Author URI: http://www.stephanpringle.com<br>
 Contributors: nyhtml<br>
