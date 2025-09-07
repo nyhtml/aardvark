@@ -1,9 +1,14 @@
 <?php
 /*
-Plugin Name: Sipylus CardResume Shortcode Handler
+Plugin Name: cardResume.php
 Description: Provides [cardResume] shortcode functionality with inline CSS and responsive mobile support.
-Version: 2025.07.13.A
-Author: <a href="http://www.stephanpringle.com">Stephan Pringle</>
+Version: 1.0.1
+Author: Stephan Pringle
+Author URI: https://www.stephanpringle.com/#aardvark
+Contributors: nyhtml
+Text Domain: aardvark
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl.html
 */
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
