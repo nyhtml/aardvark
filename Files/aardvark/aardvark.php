@@ -3,13 +3,13 @@
 Plugin Name: Aardvark&trade; by Sipylus
 Plugin URI: https://github.com/nyhtml/aardvark
 Description: The Anomalous Architecture for Responsive Design & Virtual Asset Replication Kit offers security, along with custom shortcodes that feature inline styling and responsive design.
-Version: 2025.08.31.1
+Version: 5.0.0
 Author: Stephan Pringle
-Author URI: http://www.stephanpringle.com
+Author URI: https://www.stephanpringle.com/#aardvark
 Contributors: nyhtml
 Text Domain: aardvark
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: https://www.gnu.org/licenses/gpl.html
 */
 
 if (!defined('ABSPATH')) exit;
@@ -29,7 +29,7 @@ add_action('admin_menu', 'aardvark_admin_menu');
 function aardvark_admin_menu() {
     add_menu_page(
         'Aardvark™ Settings',
-        'Aardvark™',
+        'Aardvark Pro',
         'manage_options',
         'aardvark-settings',
         'aardvark_settings_page',
@@ -38,7 +38,7 @@ function aardvark_admin_menu() {
     add_submenu_page(
         'aardvark-settings',
         'Aardvark™ Reset',
-        'Reset',
+        'Reset Setings',
         'manage_options',
         'aardvark-reset',
         'aardvark_reset_page'
@@ -70,7 +70,7 @@ function aardvark_register_settings() {
 function aardvark_settings_page() {
     ?>
     <div class="wrap">
-        <h1>Aardvark™ Settings</h1>
+        <h1>🦋 Aardvark™ Pro Settings</h1>
         <h2 class="nav-tab-wrapper">
             <a href="?page=aardvark-settings&tab=social" class="nav-tab <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'social') ? 'nav-tab-active' : ''; ?>">Social Media</a>
             <a href="?page=aardvark-settings&tab=power" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'power') ? 'nav-tab-active' : ''; ?>">Power Options</a>
@@ -83,9 +83,9 @@ function aardvark_settings_page() {
                 <?php settings_fields('aardvark_settings_group'); ?>
                 <table class="form-table">
                     <tr><th>Facebook URL or Username</th>
-                        <td><input type="text" name="aardvark_facebook" value="<?php echo esc_attr(get_option('aardvark_facebook')); ?>" placeholder="e.g. username or https://facebook.com/username"></td></tr>
-                    <tr><th>Twitter URL or Username</th>
-                        <td><input type="text" name="aardvark_twitter" value="<?php echo esc_attr(get_option('aardvark_twitter')); ?>" placeholder="e.g. username or https://twitter.com/username"></td></tr>
+                        <td><input type="text" name="aardvark_facebook" value="<?php echo esc_attr(get_option('aardvark_facebook')); ?>" placeholder="e.g. username or https://fb.com/username"></td></tr>
+                    <tr><th>Twitter/X URL or Username</th>
+                        <td><input type="text" name="aardvark_twitter" value="<?php echo esc_attr(get_option('aardvark_twitter')); ?>" placeholder="e.g. username or https://x.com/username"></td></tr>
                     <tr><th>LinkedIn URL or Username</th>
                         <td><input type="text" name="aardvark_linkedin" value="<?php echo esc_attr(get_option('aardvark_linkedin')); ?>" placeholder="e.g. username or https://linkedin.com/in/username"></td></tr>
                     <tr><th>Github URL or Username</th>
@@ -103,9 +103,9 @@ function aardvark_settings_page() {
             <form method="post" action="options.php">
                 <?php settings_fields('aardvark_power_group'); ?>
                 <table class="form-table">
-                    <tr><th>Enable PHP Version Display</th>
+                    <tr><th>⚡ Enable PHP Version Display</th>
                         <td><input type="checkbox" name="aardvark_php_version_display" value="1" <?php checked(1, get_option('aardvark_php_version_display'), true); ?> /> Show PHP & MySQL versions on Dashboard</td></tr>
-                    <tr><th>Block User REST Endpoint</th>
+                    <tr><th>🛑 Block User REST Endpoint</th>
                         <td><input type="checkbox" name="aardvark_rest_api_block" value="1" <?php checked(1, get_option('aardvark_rest_api_block'), true); ?> /> Disable REST API endpoint</td></tr>
                 </table>
                 <?php submit_button(); ?>
@@ -134,10 +134,37 @@ function aardvark_reset_page() {
     <div class="wrap">
         <h1>Aardvark™ Tools</h1>
         <form method="post">
-            <p>Clicking the button below will delete all Aardvark settings from the database. This does NOT uninstall the plugin.</p>
+            <p>Clicking the button below will delete all Aardvark settings from the database.<br>
+               This does NOT uninstall the plugin.</p>
             <input type="hidden" name="aardvark_reset_confirm" value="1">
             <?php submit_button('Reset Plugin Data', 'delete'); ?>
         </form>
     </div>
     <?php
 }
+// --- Custom Admin Menu Styling ---
+add_action('admin_head', 'aardvark_custom_admin_menu_styles');
+function aardvark_custom_admin_menu_styles() {
+    ?>
+    <style>
+        /* Top-level menu: Aardvark Pro - green */
+        #adminmenu .toplevel_page_aardvark-settings > a {
+            color: #ffffff !important; /* green */
+            font-weight: bold;
+        }
+
+        /* First submenu (Aardvark Pro with tabs) - white */
+        #adminmenu .toplevel_page_aardvark-settings ul.wp-submenu li a[href*="page=aardvark-settings"]:not([href*="aardvark-reset"]) {
+            color: #27ae60 !important;
+            font-weight: bold;
+        }
+
+        /* Reset Settings submenu - red */
+        #adminmenu .toplevel_page_aardvark-settings ul.wp-submenu li a[href*="aardvark-reset"] {
+            color: #e74c3c !important; /* red */
+            font-weight: bold;
+        }
+    </style>
+    <?php
+}
+
