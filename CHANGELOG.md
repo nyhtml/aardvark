@@ -8,13 +8,13 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [5.0.0]
 ### Added
-- Reset feature that clears options from the databse.
+- Reset feature that clears options from the database.
 - An uninstall feature.
 - Visual enhancements in the admin area.
 
 ## [4.0.0]
 ### Added
-- Security enhancements and internal inprovements.
+- Security enhancements and internal improvements.
 
 ## [3.0.0]
 ### Added
