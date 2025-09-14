@@ -1,16 +1,7 @@
 <?php
-/*
-Plugin Name: uninstall.php
-Plugin URI: https://github.com/nyhtml/aardvark
-Description: Uninstall script for Aardvark Plugin.
-Version: 5.0.0
-Author: Stephan Pringle
-Author URI: https://www.stephanpringle.com/#aardvark
-Contributors: nyhtml
-Text Domain: aardvark
-License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl.html
-*/
+/**
+ * uninstall.php — helper for Aardvark plugin
+ */
 
 if (!defined('WP_UNINSTALL_PLUGIN')) {
     exit; // Prevent direct access

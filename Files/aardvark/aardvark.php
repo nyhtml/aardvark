@@ -23,6 +23,7 @@ require_once AARDVARK_PLUGIN_DIR . 'shortcode/cardResume.php';
 require_once AARDVARK_PLUGIN_DIR . 'shortcode/cardSkill.php';
 require_once AARDVARK_PLUGIN_DIR . 'plugin/phpVersion.php';
 require_once AARDVARK_PLUGIN_DIR . 'plugin/securityRestBlock.php';
+require_once AARDVARK_PLUGIN_DIR . 'plugin/securityXMLRPC.php';
 
 // --- Admin Menu ---
 add_action('admin_menu', 'aardvark_admin_menu');
@@ -62,23 +63,45 @@ function aardvark_register_settings() {
     register_setting('aardvark_settings_group', 'aardvark_github');
     register_setting('aardvark_settings_group', 'aardvark_youtube');
     register_setting('aardvark_settings_group', 'aardvark_instagram');
-    register_setting('aardvark_power_group', 'aardvark_php_version_display');
-    register_setting('aardvark_power_group', 'aardvark_rest_api_block');
+    register_setting('aardvark_settings_group', 'aardvark_pinterest');
+    register_setting('aardvark_pro_group', 'aardvark_php_version_display');
+    register_setting('aardvark_secure_group', 'aardvark_rest_api_block');
+	register_setting('aardvark_secure_group', 'aardvark_xmlrpc_block');
+
 }
 
 // --- Settings Page ---
 function aardvark_settings_page() {
     ?>
     <div class="wrap">
-        <h1>🦋 Aardvark™ Pro Settings</h1>
+        <h1>🛡️ Aardvark Pro v<?php echo esc_html(get_plugin_data(__FILE__)['Version']); ?></h1>
         <h2 class="nav-tab-wrapper">
-            <a href="?page=aardvark-settings&tab=social" class="nav-tab <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'social') ? 'nav-tab-active' : ''; ?>">Social Media</a>
-            <a href="?page=aardvark-settings&tab=power" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'power') ? 'nav-tab-active' : ''; ?>">Power Options</a>
+            <a href="?page=aardvark-settings&tab=settings" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'settings') ? 'nav-tab-active' : ''; ?>">⚙️ Settings</a>
+            <a href="?page=aardvark-settings&tab=social" class="nav-tab <?php echo (!isset($_GET['tab']) || $_GET['tab'] == 'social') ? 'nav-tab-active' : ''; ?>">👥 Platforms</a>
+            <a href="?page=aardvark-settings&tab=secure" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'secure') ? 'nav-tab-active' : ''; ?>">👮 Security</a>
+            <a href="?page=aardvark-settings&tab=pro" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'pro') ? 'nav-tab-active' : ''; ?>">⚙️ Pro</a>
+            <a href="?page=aardvark-settings&tab=help" class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'help') ? 'nav-tab-active' : ''; ?>">ℹ️ Help</a>
+            <a href="?page=aardvark-settings&tab=download"  class="nav-tab <?php echo (isset($_GET['tab']) && $_GET['tab'] == 'download') ? 'nav-tab-active' : ''; ?>">💾 Download</a>
+
         </h2>
         <?php
-        $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'social';
-        if ($active_tab == 'social') {
+        $active_tab = isset($_GET['tab']) ? $_GET['tab'] : 'default';
+        if ($active_tab == 'default') {
             ?>
+        <h1>⚙️ Aardvark Pro Settings</h1>
+            <form method="post" action="options.php">
+                <?php settings_fields('aardvark_pro_group'); ?>
+                <table class="form-table">
+                    <tr><th>⚡ Enable PHP Version Display</th>
+                        <td><input type="checkbox" name="aardvark_php_version_display" value="1" <?php checked(1, get_option('aardvark_php_version_display'), true); ?> /> Show PHP & MySQL versions on Dashboard</td></tr>
+                </table>
+                <?php submit_button(); ?>
+            </form>
+
+            <?php
+        } elseif ($active_tab == 'social') {
+            ?>
+		<h1>👥️ Social Media Platforms</h1>
             <form method="post" action="options.php">
                 <?php settings_fields('aardvark_settings_group'); ?>
                 <table class="form-table">
@@ -98,15 +121,28 @@ function aardvark_settings_page() {
                 <?php submit_button(); ?>
             </form>
             <?php
-        } elseif ($active_tab == 'power') {
+        } elseif ($active_tab == 'secure') {
             ?>
+		<h1>👮 Security Settings</h1>
             <form method="post" action="options.php">
-                <?php settings_fields('aardvark_power_group'); ?>
+                <?php settings_fields('aardvark_secure_group'); ?>
+                <table class="form-table">
+                    <tr><th>⛔ Block User REST Endpoint</th>
+                        <td><input type="checkbox" name="aardvark_rest_api_block" value="1" <?php checked(1, get_option('aardvark_rest_api_block'), true); ?> /> Disable REST API endpoint</td></tr>
+                    <tr><th>🔒 Block XML-RPC</th>
+                        <td><input type="checkbox" name="aardvark_xmlrpc_block" value="1" <?php checked(1, get_option('aardvark_xmlrpc_block'), true); ?> /> Disable XML-RPC endpoint in .htaccess.</td></tr>
+                </table>
+                <?php submit_button(); ?>
+            </form>
+            <?php
+        } elseif ($active_tab == 'pro') {
+            ?>
+        <h1>⚙️ Pro Settings</h1>
+            <form method="post" action="options.php">
+                <?php settings_fields('aardvark_pro_group'); ?>
                 <table class="form-table">
                     <tr><th>⚡ Enable PHP Version Display</th>
                         <td><input type="checkbox" name="aardvark_php_version_display" value="1" <?php checked(1, get_option('aardvark_php_version_display'), true); ?> /> Show PHP & MySQL versions on Dashboard</td></tr>
-                    <tr><th>🛑 Block User REST Endpoint</th>
-                        <td><input type="checkbox" name="aardvark_rest_api_block" value="1" <?php checked(1, get_option('aardvark_rest_api_block'), true); ?> /> Disable REST API endpoint</td></tr>
                 </table>
                 <?php submit_button(); ?>
             </form>
@@ -132,10 +168,10 @@ function aardvark_reset_page() {
     }
     ?>
     <div class="wrap">
-        <h1>Aardvark™ Tools</h1>
+        <h1>⚠ Reset Settings</h1>
         <form method="post">
-            <p>Clicking the button below will delete all Aardvark settings from the database.<br>
-               This does NOT uninstall the plugin.</p>
+            <p>🛑 <strong>Clicking the button below will delete all Aardvark settings from the database.<br>
+            🛑 This does NOT <a href="plugins.php?plugin_status=inactive">uninstall</a> the plugin and the action cannot be undone.</strong></p>
             <input type="hidden" name="aardvark_reset_confirm" value="1">
             <?php submit_button('Reset Plugin Data', 'delete'); ?>
         </form>

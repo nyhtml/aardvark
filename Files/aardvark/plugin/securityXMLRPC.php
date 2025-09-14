@@ -1,7 +1,6 @@
 <?php
 /**
  * securityXMLRPC.php — helper for Aardvark plugin
- * Toggle XML-RPC blocking via Security Settings.
  */
 
 if (!defined('ABSPATH')) exit;

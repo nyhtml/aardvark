@@ -1,16 +1,7 @@
 <?php
-/*
-Plugin Name: phpVersion.php
-Plugin URI: https://github.com/nyhtml/aardvark
-Description: Shows the server PHP and MySQL version in the WP Dashboard "At a Glance" widget.
-Version: 1.0.1
-Author: Stephan Pringle
-Author URI: https://www.stephanpringle.com/#aardvark
-Contributors: nyhtml
-Text Domain: aardvark
-License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl.html
-*/
+/**
+ * phpVersion.php — helper for Aardvark plugin
+ */
 
 add_action('admin_enqueue_scripts', 'dpv_enqueue_script');
 

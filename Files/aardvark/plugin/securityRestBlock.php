@@ -1,16 +1,7 @@
 <?php
-/*
-Plugin Name: securityRestBlock.php
-Plugin URI: https://github.com/nyhtml/aardvark
-Description: Prevents WordPress REST API user enumeration.
-Version: 1.0.1
-Author: Stephan Pringle
-Author URI: https://www.stephanpringle.com/#aardvark
-Contributors: nyhtml
-Text Domain: aardvark
-License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl.html
-*/
+/**
+ * securityRestBlock.php — helper for Aardvark plugin
+ */
 
 if (!defined('ABSPATH')) exit; // Prevent direct access
 
