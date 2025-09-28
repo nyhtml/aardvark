@@ -6,6 +6,11 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [5.0.1]
+### Added
+- Internal improvements.
+- Visual enhancements in the admin area.
+
 ## [5.0.0]
 ### Added
 - Reset feature that clears options from the database.
