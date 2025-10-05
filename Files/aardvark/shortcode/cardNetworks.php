@@ -24,6 +24,7 @@ function cardnetworks_shortcode() {
     $linkedin  = format_social_link(get_option('aardvark_linkedin'),  'https://linkedin.com/in/');
     $github    = format_social_link(get_option('aardvark_github'),    'https://github.com/');
     $instagram = format_social_link(get_option('aardvark_instagram'), 'https://www.instagram.com/');
+    $pinterest = format_social_link(get_option('aardvark_pinterest'), 'https://www.pinterest.com/');
 
     // Handle YouTube input (supports @handle, full URL, or legacy username)
     $youtube_input = get_option('aardvark_youtube');
@@ -37,7 +38,7 @@ function cardnetworks_shortcode() {
         $youtube = null;
     }
 
-    if (!$facebook && !$twitter && !$linkedin && !$github && !$youtube && !$instagram) {
+    if (!$facebook && !$twitter && !$linkedin && !$github && !$youtube && !$instagram && !pinterest) {
         return '<p>Social links not available.</p>';
     }
 
@@ -62,6 +63,9 @@ function cardnetworks_shortcode() {
             <?php endif; ?>
             <?php if ($instagram): ?>
                 <a href="<?php echo esc_url($instagram); ?>" target="_blank" rel="nofollow noopener noreferrer" class="cn-btn instagram">Instagram</a>
+            <?php endif; ?>
+            <?php if ($pinterest): ?>
+                <a href="<?php echo esc_url($pinterest); ?>" target="_blank" rel="nofollow noopener noreferrer" class="cn-btn pinterest">Pinterest</a>
             <?php endif; ?>
         </div>
     </div>
