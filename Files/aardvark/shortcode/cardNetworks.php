@@ -1,17 +1,14 @@
 <?php
-/*
-Plugin Name: cardNetworks.php
-Description: Provides [cardNetworks] shortcode functionality with inline CSS and responsive mobile support.
-Version: 1.0.1
-Author: Stephan Pringle
-Author URI: https://www.stephanpringle.com/#aardvark
-Contributors: nyhtml
-Text Domain: aardvark
-License: GPLv3 or later
-License URI: https://www.gnu.org/licenses/gpl.html
-*/
+/**
+ * cardNetworks.php — helper shortcode for Aardvark plugin
+ * Version: 1.0.1
+ * Author: Stephan Pringle
+ */
 
 if (!defined('ABSPATH')) exit; // Prevent direct access
+if (!defined('AARDVARK_PLUGIN_VERSION')) {
+    define('AARDVARK_PLUGIN_VERSION', '1.0.1');
+}
 
 // Helper function to format social URLs
 function format_social_link($value, $base) {

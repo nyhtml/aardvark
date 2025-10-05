@@ -3,6 +3,11 @@
  * phpVersion.php — helper for Aardvark plugin
  */
 
+if (!defined('ABSPATH')) exit; // Prevent direct access
+if (!defined('AARDVARK_PHPVERSION_VERSION')) {
+    define('AARDVARK_PHPVERSION_VERSION', '1.0.1');
+}
+
 add_action('admin_enqueue_scripts', 'dpv_enqueue_script');
 
 function dpv_enqueue_script($hook) {

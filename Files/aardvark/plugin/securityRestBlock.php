@@ -4,7 +4,10 @@
  */
 
 if (!defined('ABSPATH')) exit; // Prevent direct access
-
+if (!defined('AARDVARK_SECURITYRESTBLOCK_VERSION')) {
+    define('AARDVARK_SECURITYRESTBLOCK_VERSION', '1.0.0');
+}
+	
 add_action('rest_api_init', function() {
     // Correct option key from aardvark.php
     $block_users_endpoint = filter_var(get_option('aardvark_rest_api_block', false), FILTER_VALIDATE_BOOLEAN);
